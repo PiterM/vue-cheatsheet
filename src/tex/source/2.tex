@@ -1,0 +1,32 @@
+\documentclass[12pt]{article}
+
+\usepackage[a4paper, top=1.2cm, bottom=2.4cm, left=2.4cm, right=2.4cm]{geometry}
+\usepackage{amsmath}
+\input{Qcircuit}
+\usepackage{IEEEtrantools}
+\allowdisplaybreaks[1]
+
+\newcommand{\CNOT}{\text{CNOT}}
+\newcommand{\SWAP}{\text{SWAP}}
+\newcommand{\CSWAP}{\text{CSWAP}}
+\newcommand{\TOFFOLI}{\text{TOFFOLI}}
+
+\IEEEeqnarraydefcolsep{0}{\leftmargini}
+
+\title{\vspace{-1.2cm}Quantum Computing Cheat Sheet}
+\date{}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{IEEEeqnarray*}{CCC}
+	\begin{array}{c} \Qcircuit @C=1em @R=.7em {
+			& \gate{H} & \ctrl{2} & \gate{H} & \qw & & & \targ & \qw \\
+			& & & & & \push{\rule{.12em}{0em}=\rule{.12em}{0em}} \\
+			& \gate{H} & \targ & \gate{H} & \qw & & & \ctrl{-2} & \qw
+	} \end{array} & \hspace{36pt} &
+	(H \otimes H) \CNOT_{0,1} (H \otimes H) = \CNOT_{1,0} \\[24pt]
+\end{IEEEeqnarray*}	
+
+\end{document}
