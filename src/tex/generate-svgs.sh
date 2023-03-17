@@ -43,7 +43,7 @@ do
       arrayClose=","
     fi
 
-    echo "$arrayOpen{\"$fileName\": {\"width\": $pdfWidth, \"height\": $pdfHeight}}$arrayClose" >> ../../assets/svgs.json
+    echo "$arrayOpen{\"filename\": \"$fileName\", \"width\": $pdfWidth, \"height\": $pdfHeight}$arrayClose" >> ../../assets/svgs.json
   fi
   i=$((i+1))
 done

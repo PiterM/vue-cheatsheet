@@ -1,0 +1,33 @@
+\documentclass[12pt]{article}
+
+\usepackage[a4paper, top=1.2cm, bottom=2.4cm, left=2.4cm, right=2.4cm]{geometry}
+\usepackage{amsmath}
+\input{Qcircuit}
+\usepackage{IEEEtrantools}
+\allowdisplaybreaks[1]
+
+\newcommand{\CNOT}{\text{CNOT}}
+\newcommand{\SWAP}{\text{SWAP}}
+\newcommand{\CSWAP}{\text{CSWAP}}
+\newcommand{\TOFFOLI}{\text{TOFFOLI}}
+
+\IEEEeqnarraydefcolsep{0}{\leftmargini}
+
+\title{\vspace{-1.2cm}Quantum Computing Cheat Sheet}
+\date{}
+
+\pagestyle{empty}
+
+\begin{document}
+	
+	\begin{IEEEeqnarray*}{rCllCCC}
+S & = & \begin{bmatrix} 1 & 0 \\ 0 & i \end{bmatrix} & \hspace{36pt} &
+\begin{aligned}
+	\ket{0} &\mapsto \ket{0} \\
+	\ket{1} &\mapsto i\ket{1}
+\end{aligned} & \hspace{36pt} &
+\Qcircuit @C=1em @R=.7em {
+	& \gate{S} & \qw
+} \\[12pt]
+	\end{IEEEeqnarray*} 
+\end{document}

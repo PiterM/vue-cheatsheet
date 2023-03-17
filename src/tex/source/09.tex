@@ -19,14 +19,15 @@
 \pagestyle{empty}
 
 \begin{document}
-
-\begin{IEEEeqnarray*}{CCC}
-	\begin{array}{c} \Qcircuit @C=1em @R=.7em {
-			& \gate{H} & \ctrl{2} & \gate{H} & \qw & & & \targ & \qw \\
-			& & & & & \push{\rule{.12em}{0em}=\rule{.12em}{0em}} \\
-			& \gate{H} & \targ & \gate{H} & \qw & & & \ctrl{-2} & \qw
-	} \end{array} & \hspace{36pt} &
-	(H \otimes H) \CNOT_{0,1} (H \otimes H) = \CNOT_{1,0} \\[24pt]
-\end{IEEEeqnarray*}	
-
+	
+	\begin{IEEEeqnarray*}{rCllCCC}
+H & = & \frac{1}{\sqrt{2}} \begin{bmatrix} 1 & 1 \\ 1 & -1 \end{bmatrix} & \hspace{36pt} &
+\begin{aligned}
+	\ket{0} &\mapsto \ket{+} &\quad \ket{+} &\mapsto \ket{0} \\
+	\ket{1} &\mapsto \ket{-} &\quad \ket{-} &\mapsto \ket{1}
+\end{aligned} & \hspace{36pt} &
+\Qcircuit @C=1em @R=.7em {
+	& \gate{H} & \qw
+} \\[12pt]
+	\end{IEEEeqnarray*} 
 \end{document}
