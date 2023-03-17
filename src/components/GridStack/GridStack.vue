@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { GridStack } from 'gridstack'
 import { onMounted } from 'vue'
 import svgData from '../../assets/svgs.json'
 
 const LOCAL_STORAGE_GRID_SNAPSHOT_KEY = 'GridStack.Snapshot.Current'
+
+const props = defineProps({
+  restoredGridSnapshot: { type: String, required: false }
+})
 
 const gridSnapshot = ref()
 
@@ -45,6 +49,8 @@ onMounted(() => {
     },
     '#simple-grid'
   )
+  console.log('props.restoredGridSnapshot', props.restoredGridSnapshot)
+
   if (isSavedSnapshot()) {
     loadSavedSnapshot(simpleGrid)
   } else {
@@ -64,16 +70,18 @@ onMounted(() => {
 <style lang="sass">
 @import url("gridstack/dist/gridstack.min.css")
 
-.grid-stack-item-content
-  border: 1px solid transparent
-  overflow: hidden !important
-  -webkit-user-select: none
-  -moz-user-select: none
-  -ms-user-select: none
-  user-select: none
-  &:hover
-    border-color: #000
-  & .svg-item
-    width: 100%
-    height: 100%
+#simple-grid
+  margin: 20px
+  .grid-stack-item-content
+    border: 1px solid transparent
+    overflow: hidden !important
+    -webkit-user-select: none
+    -moz-user-select: none
+    -ms-user-select: none
+    user-select: none
+    &:hover
+      border-color: #000
+    & .svg-item
+      width: 100%
+      height: 100%
 </style>

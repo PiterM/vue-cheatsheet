@@ -10,7 +10,12 @@ const props = defineProps({
       <p class="actions__title">Actions:</p>
       <ul class="actions__menu">
         <li class="actions__menu-item">
-          <button class="actions__button el-button el-button--primary">Restore defaults</button>
+          <button
+            class="actions__button el-button el-button--primary"
+            @click="() => $emit('restoreDefaults')"
+          >
+            Restore defaults
+          </button>
         </li>
         <li class="actions__menu-item">
           <button class="actions__button el-button el-button--primary">Glitch positions</button>
