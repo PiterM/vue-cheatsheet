@@ -1,7 +1,18 @@
 <script setup lang="ts">
-import GridStackWrapper from '../components/GridStackWrapper.vue'
+import { ref } from 'vue'
+import MainMenu from '@/components/MainMenu/MainMenu.vue'
+import GridStack from '@/components/GridStack/GridStack.vue'
+
+const mainMenuActive = ref(false)
+
+function toggleMainMenu() {
+  mainMenuActive.value = !mainMenuActive.value
+}
 </script>
 
 <template>
-  <GridStackWrapper msg="hello" />
+  <div class="canvas" @dblclick="() => toggleMainMenu()">
+    <MainMenu :isOpen="mainMenuActive" />
+    <GridStack msg="hello" />
+  </div>
 </template>

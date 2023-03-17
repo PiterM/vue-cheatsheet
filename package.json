@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "npm run svgs && vite",
-    "build": "npm run svgs && run-p type-check build-only",
+    "dev": "vite",
+    "build": "run-p type-check build-only",
     "preview": "vite preview",
     "test:unit": "vitest",
     "build-only": "vite build",
@@ -14,6 +14,7 @@
     "svgs": "cd ./src/tex && ./generate-svgs.sh"
   },
   "dependencies": {
+    "element-plus": "^2.3.0",
     "gridstack": "^7.2.3",
     "pinia": "^2.0.32",
     "vue": "^3.2.47",
