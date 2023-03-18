@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { GridStack } from 'gridstack'
 import { onMounted } from 'vue'
 import svgData from '../../assets/svgs.json'
-
+import { useGridSnapshotStore } from '../../stores/gridSnapshot'
 const LOCAL_STORAGE_GRID_SNAPSHOT_KEY = 'GridStack.Snapshot.Current'
 
-const props = defineProps({
-  restoredGridSnapshot: { type: String, required: false }
-})
+const gridSnapshotStore = useGridSnapshotStore()
+const defaultGridSnapshot = computed(() => gridSnapshotStore.gridDefaultSnapshot)
+
+let simpleGrid: any
 
 const gridSnapshot = ref()
 
@@ -29,7 +30,7 @@ const grid = svgData.reverse().map((value) => {
 function loadSavedSnapshot(grid: any) {
   const savedSnapshot = localStorage.getItem(LOCAL_STORAGE_GRID_SNAPSHOT_KEY)
   if (savedSnapshot) {
-    grid.load(JSON.parse(savedSnapshot))
+    simpleGrid.load(JSON.parse(savedSnapshot))
   }
 }
 
@@ -37,19 +38,30 @@ function isSavedSnapshot() {
   return !!localStorage.getItem(LOCAL_STORAGE_GRID_SNAPSHOT_KEY)
 }
 
+const emit = defineEmits(['hideMainMenu'])
+
 watch(gridSnapshot, (first) => {
   localStorage.setItem(LOCAL_STORAGE_GRID_SNAPSHOT_KEY, first)
 })
 
+watch(defaultGridSnapshot, (first) => {
+  if (first.length) {
+    simpleGrid.load([])
+    simpleGrid.load(first)
+    localStorage.setItem(LOCAL_STORAGE_GRID_SNAPSHOT_KEY, JSON.stringify(first))
+    gridSnapshotStore.setDefaultGridSnapshot([])
+    emit('hideMainMenu')
+  }
+})
+
 onMounted(() => {
-  const simpleGrid = GridStack.init(
+  simpleGrid = GridStack.init(
     {
       alwaysShowResizeHandle: false,
       margin: 2
     },
     '#simple-grid'
   )
-  console.log('props.restoredGridSnapshot', props.restoredGridSnapshot)
 
   if (isSavedSnapshot()) {
     loadSavedSnapshot(simpleGrid)

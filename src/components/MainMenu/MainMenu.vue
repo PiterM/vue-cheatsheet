@@ -1,24 +1,23 @@
 <script setup lang="ts">
-const props = defineProps({
-  isOpen: { type: Boolean, required: true }
-})
+import { useGridSnapshotStore } from '../../stores/gridSnapshot'
+const gridSnapshotStore = useGridSnapshotStore()
+
+function loadDefaultSnapshot() {
+  gridSnapshotStore.setDefaultGridSnapshot()
+}
 </script>
 
 <template>
-  <div class="main-menu" :class="{ 'is-open': props.isOpen }">
+  <div class="main-menu">
     <div class="actions">
-      <p class="actions__title">Actions:</p>
       <ul class="actions__menu">
         <li class="actions__menu-item">
           <button
             class="actions__button el-button el-button--primary"
-            @click="() => $emit('restoreDefaults')"
+            @click="() => loadDefaultSnapshot()"
           >
             Restore defaults
           </button>
-        </li>
-        <li class="actions__menu-item">
-          <button class="actions__button el-button el-button--primary">Glitch positions</button>
         </li>
       </ul>
     </div>
@@ -30,15 +29,11 @@ const props = defineProps({
   position: fixed
   top: 0
   width: 100%
-  height: 85px
+  height: 55px
   background-color: #444
   color: #fff
   padding: 10px 20px
   z-index: 1000
-  transform: translateY(-100%)
-  transition: transform 0.2s ease-out
-  &.is-open
-    transform: translateY(0)
   .actions
     &__title
       font-weight: bold
