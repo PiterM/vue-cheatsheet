@@ -2,18 +2,26 @@
 import { ref, watch, computed } from 'vue'
 import { GridStack } from 'gridstack'
 import { onMounted } from 'vue'
-import svgData from '../../assets/svgs.json'
-import { useGridSnapshotStore } from '../../stores/gridSnapshot'
-const LOCAL_STORAGE_GRID_SNAPSHOT_KEY = 'GridStack.Snapshot.Current'
+import svgData1 from '@/tex/source/1/svgs.json'
+import svgData2 from '@/tex/source/2/svgs.json'
+import { useGridStore } from '../../stores/gridStore'
 
-const gridSnapshotStore = useGridSnapshotStore()
-const defaultGridSnapshot = computed(() => gridSnapshotStore.gridDefaultSnapshot)
+const localStorageGridSnapshotKey = {
+  layout1: 'GridStack.Snapshot.1.Current',
+  layout2: 'GridStack.Snapshot.2.Current'
+}
 
+const gridStore = useGridStore()
+const defaultGridSnapshot = computed(() => gridStore.gridDefaultSnapshot)
+const currentSvgLayout = computed(() => gridStore.currentSvgLayout as string)
+
+let svgData: any
 let simpleGrid: any
+let grid: any
 
-const gridSnapshot = ref()
+svgData = currentSvgLayout.value === 'layout1' ? svgData1 : svgData2
 
-const grid = svgData.reverse().map((value) => {
+grid = svgData.reverse().map((value: any) => {
   const aspectRatio = value.width / value.height
   const w = Math.floor(aspectRatio / 2) * 2
   const h = 1
@@ -27,31 +35,72 @@ const grid = svgData.reverse().map((value) => {
   }
 })
 
-function loadSavedSnapshot(grid: any) {
-  const savedSnapshot = localStorage.getItem(LOCAL_STORAGE_GRID_SNAPSHOT_KEY)
+const gridSnapshot = ref()
+
+function loadSavedSnapshot() {
+  const savedSnapshot = localStorage.getItem(
+    (localStorageGridSnapshotKey as any)[currentSvgLayout.value]
+  )
   if (savedSnapshot) {
+    simpleGrid.load([])
     simpleGrid.load(JSON.parse(savedSnapshot))
   }
 }
 
 function isSavedSnapshot() {
-  return !!localStorage.getItem(LOCAL_STORAGE_GRID_SNAPSHOT_KEY)
+  return !!localStorage.getItem((localStorageGridSnapshotKey as any)[currentSvgLayout.value])
+}
+
+function loadGrid(grid: any) {
+  simpleGrid.load([])
+  simpleGrid.load(grid)
+}
+
+function manageGrids(grid: any) {
+  if (isSavedSnapshot()) {
+    loadSavedSnapshot()
+  } else {
+    loadGrid(grid)
+  }
 }
 
 const emit = defineEmits(['hideMainMenu'])
 
 watch(gridSnapshot, (first) => {
-  localStorage.setItem(LOCAL_STORAGE_GRID_SNAPSHOT_KEY, first)
+  localStorage.setItem((localStorageGridSnapshotKey as any)[currentSvgLayout.value], first)
 })
 
 watch(defaultGridSnapshot, (first) => {
   if (first.length) {
     simpleGrid.load([])
     simpleGrid.load(first)
-    localStorage.setItem(LOCAL_STORAGE_GRID_SNAPSHOT_KEY, JSON.stringify(first))
-    gridSnapshotStore.setDefaultGridSnapshot([])
+    localStorage.setItem(
+      (localStorageGridSnapshotKey as any)[currentSvgLayout.value],
+      JSON.stringify(first)
+    )
+    gridStore.resetDefaultGridSnapshot()
     emit('hideMainMenu')
   }
+})
+
+watch(currentSvgLayout, (first) => {
+  svgData = first === 'layout1' ? svgData1 : svgData2
+
+  grid = svgData.reverse().map((value: any) => {
+    const aspectRatio = value.width / value.height
+    const w = Math.floor(aspectRatio / 2) * 2
+    const h = 1
+
+    return {
+      x: 0,
+      y: 0,
+      w,
+      h,
+      content: `<img src="/svg/${value.filename}" class="svg-item" />`
+    }
+  })
+  manageGrids(grid)
+  emit('hideMainMenu')
 })
 
 onMounted(() => {
@@ -63,11 +112,7 @@ onMounted(() => {
     '#simple-grid'
   )
 
-  if (isSavedSnapshot()) {
-    loadSavedSnapshot(simpleGrid)
-  } else {
-    simpleGrid.load(grid)
-  }
+  manageGrids(grid)
 
   simpleGrid.on('change', () => {
     gridSnapshot.value = JSON.stringify(simpleGrid.save())

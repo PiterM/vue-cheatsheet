@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { useGridSnapshotStore } from '../../stores/gridSnapshot'
-const gridSnapshotStore = useGridSnapshotStore()
+import { useGridStore } from '../../stores/gridStore'
+const gridStore = useGridStore()
 
 function loadDefaultSnapshot() {
-  gridSnapshotStore.setDefaultGridSnapshot()
+  gridStore.setDefaultGridSnapshot()
+}
+
+function setLayout(layout: String) {
+  gridStore.setCurrentSvgLayout(layout)
 }
 </script>
 
@@ -11,6 +15,22 @@ function loadDefaultSnapshot() {
   <div class="main-menu">
     <div class="actions">
       <ul class="actions__menu">
+        <li class="actions__menu-item">
+          <button
+            class="actions__button el-button el-button--primary"
+            @click="() => setLayout('layout1')"
+          >
+            Layout #1
+          </button>
+        </li>
+        <li class="actions__menu-item">
+          <button
+            class="actions__button el-button el-button--primary"
+            @click="() => setLayout('layout2')"
+          >
+            Layout #2
+          </button>
+        </li>
         <li class="actions__menu-item">
           <button
             class="actions__button el-button el-button--primary"
