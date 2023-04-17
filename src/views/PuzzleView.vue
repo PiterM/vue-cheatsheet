@@ -1,10 +1,39 @@
 <script setup lang="ts">
-import MainMenu from '@/components/MainMenu/MainMenu.vue'
+import html2pdf from 'html2pdf.js'
+import { ref, onMounted } from 'vue'
+import GridStack from '@/components/GridStack/GridStack.vue'
+import svgGridJson1 from '@/tex/source/1/svgs.json'
+import svgGridJson2 from '@/tex/source/2/svgs.json'
+
+const mainMenuActive = ref(false)
+const currentSvgGridJson = ref(svgGridJson1)
+
+function toggleMainMenu() {
+  mainMenuActive.value = !mainMenuActive.value
+}
+
+function handleTabClick(event: any) {
+  console.log('event', event)
+}
+
+onMounted(() => {
+  const element = document.getElementById('canvas')
+  const opt = {
+    margin: 1,
+    filename: 'myfile.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' }
+  }
+
+  // New Promise-based usage:
+  // html2pdf().set(opt).from(element).save()
+})
 </script>
 
 <template>
   <div id="canvas" class="canvas">
-    <GridStack json="currentSvgGridJson" />
+    <MainMenu />
+    <GridStack @hide-main-menu="toggleMainMenu" json="currentSvgGridJson" />
     <svg
       width="106"
       height="29"
@@ -23,3 +52,15 @@ import MainMenu from '@/components/MainMenu/MainMenu.vue'
     </svg>
   </div>
 </template>
+
+<style lang="sass">
+.canvas
+  width: 100%
+  height: 100%
+  svg
+    width: 100%
+    height: 100%
+path
+  stroke: black
+  stroke-width: 0.5
+</style>
